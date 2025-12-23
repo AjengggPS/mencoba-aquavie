@@ -13,8 +13,14 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('feedback_type', ['saran', 'kritik', 'pengalaman', 'lainnya']);
             $table->text('message');
-            $table->enum('status', ['new', 'reviewed', 'archived'])->default('new');
+            $table->enum('status', ['new', 'reviewed', 'in_progress', 'resolved', 'archived'])->default('new');
+            $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
+            $table->foreignId('handled_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->text('admin_response')->nullable();
+            $table->timestamp('reviewed_at')->nullable();
             $table->timestamps();
+            
+            $table->index(['status', 'priority']);
         });
     }
 
